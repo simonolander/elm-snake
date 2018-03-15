@@ -7,16 +7,6 @@ import Random
 -- CONSTANTS
 
 
-keyCodeW = 87
-keyCodeA = 65
-keyCodeS = 83
-keyCodeD = 68
-keyCodeLeft = 37
-keyCodeUp = 38
-keyCodeRight = 39
-keyCodeDown = 40
-
-
 -- MODEL
 
 
@@ -35,7 +25,7 @@ type alias Model =
     , snake: Snake
     , world: World
     , gameOver: GameOver
-    , apple: Apple
+    , apple: Maybe Apple
     }
 
 
@@ -44,11 +34,11 @@ init =
     ( { keyCode = 0
       , direction = Right
       , time = 0
-      , world = { width = 50, height = 50 }
-      , snake = [{ x = 25, y = 25 }, { x = 24, y = 25 }]
+      , world = { width = 25, height = 25 }
+      , snake = [{ x = 12, y = 12 }, { x = 11, y = 12 }]
       , gameOver = False
-      , apple = { x = 30, y = 30 }
-      }, Cmd.none )
+      , apple = Nothing
+      }, generateApple { width = 25, height = 25 } )
 
 
 
@@ -58,6 +48,7 @@ init =
 type Msg
     = KeyMsg Keyboard.KeyCode
     | Tick Time
+    | NewApple Apple
 
 
 
@@ -67,8 +58,7 @@ type Msg
 view : Model -> Html Msg
 view model =
     div []
-        [ pre [] [text (toString model)]
-        , pre [] [model.keyCode |> toDirection |> toString |> text]
+        [ div [] [text (toString model)]
         , pre [] [renderWorld model |> text]
         ]
 
@@ -91,9 +81,11 @@ update msg model =
                 Move snake ->
                     ( { model | time = time, snake = snake }, Cmd.none )
                 Apple snake ->
-                    ( { model | time = time, snake = snake }, Cmd.none )
+                    ( { model | time = time, snake = snake }, generateApple model.world )
                 Fail snake ->
                     ( { model | time = time, snake = snake, gameOver = True }, Cmd.none )
+        NewApple apple ->
+            ( { model | apple = Just apple }, Cmd.none )
 
 
 
@@ -124,6 +116,7 @@ main =
 
 -- FUNCTIONS
 
+
 toDirection : Keyboard.KeyCode -> Maybe Direction
 toDirection code =
     case code of
@@ -137,6 +130,7 @@ toDirection code =
         40 -> Just Down     -- Down
         default -> Nothing
 
+
 changeDirection : Direction -> Direction -> Direction
 changeDirection from to =
     case (from, to) of
@@ -146,25 +140,29 @@ changeDirection from to =
         (Right, Left) -> from
         default -> to
 
+
 renderWorld : Model -> String
 renderWorld model =
-    List.range 0 (model.world.height - 1)
+    List.range 0 (model.world.height)
     |> List.map (renderWorldLine model)
     |> String.join (String.fromList ['\n'])
 
+
 renderWorldLine : Model -> Int -> String
-renderWorldLine model y = List.range 0 (model.world.width - 1) |> List.map (renderWorldCell model y) |> String.fromList
+renderWorldLine model y = List.range 0 (model.world.width) |> List.map (renderWorldCell model y) |> String.fromList
+
 
 renderWorldCell : Model -> Int -> Int -> Char
 renderWorldCell { snake, apple } y x =
     let
         point = { x = x, y = y }
     in
-        if point == apple
+        if apple |> Maybe.map ((==) point) |> Maybe.withDefault False
             then ''
         else if List.member point snake
             then 'O'
             else ' '
+
 
 movePoint : Direction -> Point -> Point
 movePoint dir p =
@@ -177,6 +175,7 @@ movePoint dir p =
             { p | x = p.x + 1}
         Down ->
             { p | y = p.y + 1}
+
 
 moveSnake : Model -> SnakeMove
 moveSnake {world, snake, direction, apple} =
@@ -192,13 +191,20 @@ moveSnake {world, snake, direction, apple} =
                     if List.member newHead newTail
                     then
                         Fail snake
-                    else if newHead.x < 0 || newHead.x >= world.width || newHead.y < 0 || newHead.y >= world.height
+                    else if newHead.x < 0 || newHead.x > world.width || newHead.y < 0 || newHead.y > world.height
                     then
                         Fail snake
-                    else if newHead == apple
+                    else if apple |> Maybe.map ((==) newHead) |> Maybe.withDefault False
                     then
                         Apple (newHead :: snake)
                     else
                         Move (newHead :: newTail)
             Nothing ->
                 Fail snake
+
+
+generateApple : World -> Cmd Msg
+generateApple { width, height } =
+    Random.pair (Random.int 0 width) (Random.int 0 height)
+    |> Random.map (\(x, y) -> { x = x, y = y })
+    |> Random.generate NewApple
