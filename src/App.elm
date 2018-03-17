@@ -3,6 +3,10 @@ import Html exposing (Html, div, text, program, pre)
 import Keyboard
 import Time exposing (Time, second, millisecond)
 import Random
+import Bootstrap.CDN as CDN
+import Bootstrap.Grid as Grid
+import Bootstrap.Grid.Col as Col
+import Bootstrap.Grid.Row as Row
 
 -- CONSTANTS
 
@@ -57,9 +61,23 @@ type Msg
 
 view : Model -> Html Msg
 view model =
-    div []
-        [ div [] [text (toString model)]
-        , pre [] [renderWorld model |> text]
+    gameView model
+
+
+debugView model =
+    div [] [ div [] [text (toString model)]
+           , renderWorld model
+           ]
+
+gameView model =
+    Grid.container []
+        [ CDN.stylesheet -- creates an inline style node with the Bootstrap CSS
+        , Grid.row [ Row.centerXl ]
+              [ Grid.col [] [ text "1 of 3"]
+              , Grid.col [ Col.xs8, Col.middleLg] [ renderWorld model ]
+              , Grid.col [] [ text "3 of 3"]
+              ]
+
         ]
 
 
@@ -81,7 +99,7 @@ update msg model =
                 Move snake ->
                     ( { model | time = time, snake = snake }, Cmd.none )
                 Apple snake ->
-                    ( { model | time = time, snake = snake }, generateApple model.world )
+                    ( { model | time = time, snake = snake, apple = Nothing }, generateApple model.world )
                 Fail snake ->
                     ( { model | time = time, snake = snake, gameOver = True }, Cmd.none )
         NewApple apple ->
@@ -141,19 +159,25 @@ changeDirection from to =
         default -> to
 
 
-renderWorld : Model -> String
-renderWorld model =
+renderWorld : Model -> Html msg
+renderWorld model = pre [] [worldAsString model |> text]
+
+
+worldAsString : Model -> String
+worldAsString model =
     List.range 0 (model.world.height)
-    |> List.map (renderWorldLine model)
+    |> List.map (worldLineAsString model)
+    |> (::) ( "+" ++ ( String.repeat (model.world.width + 1) "-" ) ++ "+" )
+    |> flip (++) [ "+" ++ ( String.repeat (model.world.width + 1) "-" ) ++ "+" ]
     |> String.join (String.fromList ['\n'])
 
 
-renderWorldLine : Model -> Int -> String
-renderWorldLine model y = List.range 0 (model.world.width) |> List.map (renderWorldCell model y) |> String.fromList
+worldLineAsString : Model -> Int -> String
+worldLineAsString model y = "|" ++ (List.range 0 (model.world.width) |> List.map (worldCellAsString model y) |> String.fromList) ++ "|"
 
 
-renderWorldCell : Model -> Int -> Int -> Char
-renderWorldCell { snake, apple } y x =
+worldCellAsString : Model -> Int -> Int -> Char
+worldCellAsString { snake, apple } y x =
     let
         point = { x = x, y = y }
     in
