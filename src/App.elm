@@ -256,49 +256,51 @@ renderSnakePiece model snakePiece =
     let
         rp = model.rp
         ratio = 0.8
-        rx = rp.unit.width / 2
+        x = rp.unit.width
+        rx = x / 2
         dx = rx * (1 - ratio)
         x1 = -rx
         x2 = x1 + dx
         x4 = rx
         x3 = x4 - dx
-        ry = rp.unit.height / 2
+        y = rp.unit.height
+        ry = y / 2
         dy = ry * (1 - ratio)
         y1 = -ry
         y2 = y1 + dy
         y4 = ry
         y3 = y4 - dy
-        arc cx cy hw hh rad1 rad2 =
+        arc cx cy hw hh rad arcLength =
             let
-                n = ceiling (50 * 2 * pi / (rad2 - rad1))
-                f i = ( cx + hw * cos (rad2 - (1 - toFloat i) * rad1)
-                      , cy + hh * sin (rad2 - (1 - toFloat i) * rad1)
+                n = ceiling (50 * 2 * pi / arcLength)
+                f i = ( cx + hw * cos (rad + arcLength * toFloat i / toFloat n)
+                      , cy + hh * sin (rad + arcLength * toFloat i / toFloat n)
                       )
             in
                 List.map f (List.range 0 (n - 1))
     in
         case snakePiece of
-            Body Left Right  -> Collage.polygon [(x1, y2), (x4, y2), (x4, y3), (x1, y3)]
-            Body Right Left  -> Collage.polygon [(x1, y2), (x4, y2), (x4, y3), (x1, y3)]
-            Body Up Down     -> Collage.polygon [(x2, y1), (x3, y1), (x3, y4), (x2, y4)]
-            Body Down Up     -> Collage.polygon [(x2, y1), (x3, y1), (x3, y4), (x2, y4)]
-            Body Left Down   -> Collage.polygon [(x2, y1), (x3, y1), (x3, y3), (x1, y3), (x1, y2), (x2, y2)]
-            Body Down Left   -> Collage.polygon [(x2, y1), (x3, y1), (x3, y3), (x1, y3), (x1, y2), (x2, y2)]
-            Body Right Down  -> Collage.polygon [(x2, y1), (x3, y1), (x3, y2), (x4, y2), (x4, y3), (x2, y3)]
-            Body Down Right  -> Collage.polygon [(x2, y1), (x3, y1), (x3, y2), (x4, y2), (x4, y3), (x2, y3)]
-            Body Up Left     -> Collage.polygon [(x1, y2), (x3, y2), (x3, y4), (x2, y4), (x2, y3), (x1, y3)]
-            Body Left Up     -> Collage.polygon [(x1, y2), (x3, y2), (x3, y4), (x2, y4), (x2, y3), (x1, y3)]
-            Body Up Right    -> Collage.polygon [(x2, y2), (x4, y2), (x4, y3), (x3, y3), (x3, y4), (x2, y4)]
-            Body Right Up    -> Collage.polygon [(x2, y2), (x4, y2), (x4, y3), (x3, y3), (x3, y4), (x2, y4)]
-            Head Left -> Collage.polygon [(x1, y2), (x3, y2), (x3, y3), (x1, y3)]
-            Head Right -> Collage.polygon [(x2, y2), (x4, y2), (x4, y3), (x2, y3)]
-            Head Up   -> Collage.polygon [(x2, y2), (x3, y2), (x3, y4), (x2, y4)]
-            Head Down  -> Collage.polygon [(x2, y1), (x3, y1), (x3, y3), (x2, y3)]
-            Tail Left -> Collage.polygon [(x1, y2), (x3, y2), (x3, y3), (x1, y3)]
-            Tail Right -> Collage.polygon [(x2, y2), (x4, y2), (x4, y3), (x2, y3)]
-            Tail Up   -> Collage.polygon [(x2, y2), (x3, y2), (x3, y4), (x2, y4)]
-            Tail Down  -> Collage.polygon [(x2, y1), (x3, y1), (x3, y3), (x2, y3)]
-            Egg -> Collage.polygon [(x2, y2), (x3, y2), (x3, y3), (x2, y3)] |> Debug.log "Egg"
+            Body Left Right -> Collage.polygon [(x1, y2), (x4, y2), (x4, y3), (x1, y3)]
+            Body Right Left -> Collage.polygon [(x1, y2), (x4, y2), (x4, y3), (x1, y3)]
+            Body Up Down    -> Collage.polygon [(x2, y1), (x3, y1), (x3, y4), (x2, y4)]
+            Body Down Up    -> Collage.polygon [(x2, y1), (x3, y1), (x3, y4), (x2, y4)]
+            Body Left Down  -> Collage.polygon [(x2, y1), (x3, y1), (x3, y3), (x1, y3), (x1, y2), (x2, y2)]
+            Body Down Left  -> Collage.polygon [(x2, y1), (x3, y1), (x3, y3), (x1, y3), (x1, y2), (x2, y2)]
+            Body Right Down -> Collage.polygon [(x2, y1), (x3, y1), (x3, y2), (x4, y2), (x4, y3), (x2, y3)]
+            Body Down Right -> Collage.polygon [(x2, y1), (x3, y1), (x3, y2), (x4, y2), (x4, y3), (x2, y3)]
+            Body Up Left    -> Collage.polygon [(x1, y2), (x3, y2), (x3, y4), (x2, y4), (x2, y3), (x1, y3)]
+            Body Left Up    -> Collage.polygon [(x1, y2), (x3, y2), (x3, y4), (x2, y4), (x2, y3), (x1, y3)]
+            Body Up Right   -> Collage.polygon [(x2, y2), (x4, y2), (x4, y3), (x3, y3), (x3, y4), (x2, y4)]
+            Body Right Up   -> Collage.polygon [(x2, y2), (x4, y2), (x4, y3), (x3, y3), (x3, y4), (x2, y4)]
+            Head Left       -> (x1, y3) :: (x1, y2) :: arc 0 0 (rx * ratio) (ry * ratio) (-pi / 2) pi |> Collage.polygon
+            Head Right      -> (x4, y2) :: (x4, y3) :: arc 0 0 (rx * ratio) (ry * ratio) (pi / 2) pi |> Collage.polygon
+            Head Up         -> (x3, y4) :: (x2, y4) :: arc 0 0 (rx * ratio) (ry * ratio) pi pi |> Collage.polygon
+            Head Down       -> (x2, y1) :: (x3, y1) :: arc 0 0 (rx * ratio) (ry * ratio) 0 pi |> Collage.polygon
+            Tail Left       -> Collage.polygon [(x1, y2), (x3, y2), (x3, y3), (x1, y3)]
+            Tail Right      -> Collage.polygon [(x2, y2), (x4, y2), (x4, y3), (x2, y3)]
+            Tail Up         -> Collage.polygon [(x2, y2), (x3, y2), (x3, y4), (x2, y4)]
+            Tail Down       -> Collage.polygon [(x2, y1), (x3, y1), (x3, y3), (x2, y3)]
+            Egg -> Collage.polygon [(x2, y2), (x3, y2), (x3, y3), (x2, y3)]
             default -> Debug.log (toString snakePiece) (Collage.polygon [(x2, y2), (x3, y2), (x3, y3), (x2, y3)])
 
 renderApple : Model -> Collage.Form
