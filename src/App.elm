@@ -296,10 +296,10 @@ renderSnakePiece model snakePiece =
             Head Right      -> (x4, y2) :: (x4, y3) :: arc 0 0 (rx * ratio) (ry * ratio) (pi / 2) pi |> Collage.polygon
             Head Up         -> (x3, y4) :: (x2, y4) :: arc 0 0 (rx * ratio) (ry * ratio) pi pi |> Collage.polygon
             Head Down       -> (x2, y1) :: (x3, y1) :: arc 0 0 (rx * ratio) (ry * ratio) 0 pi |> Collage.polygon
-            Tail Left       -> Collage.polygon [(x1, y2), (x3, y2), (x3, y3), (x1, y3)]
-            Tail Right      -> Collage.polygon [(x2, y2), (x4, y2), (x4, y3), (x2, y3)]
-            Tail Up         -> Collage.polygon [(x2, y2), (x3, y2), (x3, y4), (x2, y4)]
-            Tail Down       -> Collage.polygon [(x2, y1), (x3, y1), (x3, y3), (x2, y3)]
+            Tail Left       -> (x1, y3) :: (x1, y2) :: arc 0 0 (rx * ratio) (ry * ratio) (-pi / 2) pi |> Collage.polygon
+            Tail Right      -> (x4, y2) :: (x4, y3) :: arc 0 0 (rx * ratio) (ry * ratio) (pi / 2) pi |> Collage.polygon
+            Tail Up         -> (x3, y4) :: (x2, y4) :: arc 0 0 (rx * ratio) (ry * ratio) pi pi |> Collage.polygon
+            Tail Down       -> (x2, y1) :: (x3, y1) :: arc 0 0 (rx * ratio) (ry * ratio) 0 pi |> Collage.polygon
             Egg -> Collage.polygon [(x2, y2), (x3, y2), (x3, y3), (x2, y3)]
             default -> Debug.log (toString snakePiece) (Collage.polygon [(x2, y2), (x3, y2), (x3, y3), (x2, y3)])
 
