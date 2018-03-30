@@ -9,6 +9,7 @@ instructions =
         [ h1 [] [ text "Instructions" ]
         , p [] [ text "WASD or arrow keys to move" ]
         , p [] [ text "Spacebar to pause" ]
+        , p [] [ text "'n' to change name" ]
         , p [] [ text "Collect the apples for points" ]
         , p [] [ text "Don't hit yourself or the wall" ]
         ]
