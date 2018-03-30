@@ -12,10 +12,10 @@ import Util exposing (..)
 getRenderParams : World -> RenderParams
 getRenderParams world =
     let
-        borderThicknessRatio = 0.05
+        borderThicknessRatio = 0.0125
         collage = { width = 600, height = 600 }
         board = { width = collage.width * (1 - 2 * borderThicknessRatio), height = collage.height * (1 - 2 * borderThicknessRatio) }
-        unit = { width = board.width / toFloat world.width, height = board.height / toFloat world.height }
+        unit = { width = board.width / toFloat (world.width + 1), height = board.height / toFloat (world.height + 1) }
     in
         { collage = collage
         , board = board
@@ -82,7 +82,7 @@ renderWorldBorders model =
         sh = h * rp.borderThicknessRatio
         ox = w / 2 - sw / 8
         oy = h / 2 - sh / 8
-        color = Color.black
+        color = Color.lightCharcoal
     in
         Collage.group
         [ Collage.rect sw h |> Collage.filled color |> Collage.moveX -ox
