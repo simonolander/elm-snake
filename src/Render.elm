@@ -36,7 +36,7 @@ render model =
                 NotStarted -> renderText "elm-snake" "Press SPACE to begin"
                 GameOver -> renderText "Game Over" "Press SPACE to restart"
                 Paused -> renderText "Paused" "Press SPACE to resume"
-                EnterName -> renderText "Enter Name" "Enter name"
+                EnterName -> renderText "Enter Name" ("> " ++ model.scoreboard.currentScore.name ++ "_")
                 Running -> Collage.group []
         collage =
             Collage.collage
@@ -60,8 +60,10 @@ renderText title subTitle =
         subTitleHeight = 20
         titleText = Text.fromString title
             |> Text.height titleHeight
+            |> Text.monospace
         subTitleText = Text.fromString subTitle
             |> Text.height subTitleHeight
+            |> Text.monospace
     in
         Collage.group
             [ titleText |> Collage.text |> Collage.moveY ( titleHeight / 2 )

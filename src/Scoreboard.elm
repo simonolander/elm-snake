@@ -22,7 +22,7 @@ toOl scoreboard =
                 LT -> GT
                 GT -> LT
         toLi (score, classes) =
-            li classes [ text ( score.name ++ (": ") ++ (toString score.score) ) ]
+            li classes [ text ( String.padRight 12 ' ' score.name ++ (toString score.score) ) ]
         scores =
             ( scoreboard.currentScore, [ class "currentScore" ] ) :: ( List.map addDefaultClass scoreboard.scores )
             |> List.sortWith scoreComparison

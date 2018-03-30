@@ -32,7 +32,7 @@ init =
       , snake = snake
       , apple = Nothing
       , rp = getRenderParams world
-      , scoreboard = { scores = [], currentScore = { score = 0, name = "Simon" } }
+      , scoreboard = { scores = [], currentScore = { score = 0, name = "anon" } }
       , gameState = NotStarted
       }, generateApple world )
 

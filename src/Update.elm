@@ -1,5 +1,6 @@
 module Update exposing (update)
 
+import Char
 import Keyboard
 import Time
 import Model exposing (..)
@@ -21,6 +22,7 @@ keyMsg code model =
         NotStarted ->
             case code of
                 32 -> ( { model | keyCode = code, gameState = Running }, Cmd.none )
+                78 -> ( { model | keyCode = code, gameState = EnterName }, Cmd.none )
                 default -> ( { model | keyCode = code }, Cmd.none )
         GameOver ->
             let
@@ -41,10 +43,12 @@ keyMsg code model =
                                                             }
                                            }
                             }, generateApple model.world )
+                    78 -> ( { model | keyCode = code, gameState = EnterName }, Cmd.none )
                     default -> ( { model | keyCode = code }, Cmd.none )
         Running ->
             case code of
                 32 -> ( { model | keyCode = code, gameState = Paused }, Cmd.none )
+                78 -> ( { model | keyCode = code, gameState = EnterName }, Cmd.none )
                 default ->
                     let
                         direction =
@@ -56,8 +60,24 @@ keyMsg code model =
         Paused ->
             case code of
                 32 -> ( { model | keyCode = code, gameState = Running }, Cmd.none )
+                78 -> ( { model | keyCode = code, gameState = EnterName }, Cmd.none )
                 default -> ( { model | keyCode = code }, Cmd.none )
-        EnterName -> ( model, Cmd.none )
+        EnterName ->
+            case code of
+                13 -> ( { model | keyCode = code, gameState = Paused }, Cmd.none )
+                default ->
+                    let
+                        scoreboard = model.scoreboard
+                        currentScore = scoreboard.currentScore
+                        oldName = model.scoreboard.currentScore.name
+                        nameLength = String.length oldName
+                        newName =
+                            case code of
+                                8 -> String.dropRight 1 oldName
+                                default -> String.left 10 ( String.append oldName ( code |> Char.fromCode |> String.fromChar ) )
+                            |> String.toLower
+                    in
+                        ( { model | keyCode = code, scoreboard = { scoreboard | currentScore = { currentScore | name = newName } } }, Cmd.none )
 
 
 tick : Time.Time -> Model -> ( Model, Cmd Msg )
