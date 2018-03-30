@@ -86,7 +86,7 @@ names =
     , "rouvin"
     , "rowland"
     , "sandor"
-    , "shellysheldon"
+    , "sheldon"
     , "sheppard"
     , "sly"
     , "sondra"
