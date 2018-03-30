@@ -43,3 +43,4 @@ type Msg
     = KeyMsg Keyboard.KeyCode
     | Tick Time
     | NewApple Apple
+    | NewName String

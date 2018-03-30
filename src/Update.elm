@@ -14,6 +14,13 @@ update msg model =
         Tick time -> tick time model
         NewApple apple ->
             ( { model | apple = Just apple }, Cmd.none )
+        NewName name ->
+            let
+                scoreboard = model.scoreboard
+                currentScore = scoreboard.currentScore
+                newScoreboard = { scoreboard | currentScore = { currentScore | name = name } }
+            in
+                ( { model | scoreboard = newScoreboard }, Cmd.none )
 
 
 keyMsg : Keyboard.KeyCode -> Model -> ( Model, Cmd Msg )

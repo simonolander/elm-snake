@@ -1,6 +1,7 @@
 module Util exposing (..)
 
 
+import Random
 zip : List a -> List b -> List (a, b)
 zip l1 l2 =
     case (l1, l2) of
@@ -27,3 +28,13 @@ zipListWithNeighbours list =
 
 zmap : List a -> (a -> b) -> List (a, b)
 zmap list f = zip list (List.map f list)
+
+
+get : Int -> List a -> Maybe a
+get index = List.head << List.drop index
+
+randomElement : a -> List a -> Random.Generator a
+randomElement default list =
+    Random.int 0 ( List.length list )
+    |> Random.map (flip get list)
+    |> Random.map ( Maybe.withDefault default )

@@ -6,6 +6,7 @@ import Color
 import Html exposing (Html, article, aside, aside, div, footer, header, node, pre, program, text)
 import Collage
 import Keyboard
+import Names exposing (generateName)
 import Render exposing (getRenderParams, render)
 import Scoreboard exposing (scoreboard, updateScore)
 import Snake exposing (generateApple)
@@ -34,7 +35,7 @@ init =
       , rp = getRenderParams world
       , scoreboard = { scores = [], currentScore = { score = 0, name = "anon" } }
       , gameState = NotStarted
-      }, generateApple world )
+      }, Cmd.batch [generateApple world, generateName] )
 
 
 -- VIEW
