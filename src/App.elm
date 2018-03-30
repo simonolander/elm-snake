@@ -20,17 +20,18 @@ init =
     let
         world = { width = 26, height = 26 }
         snake = [(world.width // 2, world.height // 2)]
+        model = { keyCode = 0
+                , direction = Right
+                , time = 0
+                , world = world
+                , snake = snake
+                , apple = Nothing
+                , rp = getRenderParams world
+                , scoreboard = { scores = [], currentScore = { score = 0, name = "anon" } }
+                , gameState = NotStarted
+                }
     in
-    ( { keyCode = 0
-      , direction = Right
-      , time = 0
-      , world = world
-      , snake = snake
-      , apple = Nothing
-      , rp = getRenderParams world
-      , scoreboard = { scores = [], currentScore = { score = 0, name = "anon" } }
-      , gameState = NotStarted
-      }, Cmd.batch [generateApple world, generateName] )
+    ( model, Cmd.batch [generateApple snake model.world, generateName] )
 
 
 -- VIEW

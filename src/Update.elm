@@ -37,19 +37,23 @@ keyMsg code model =
                 currentScore = scoreboard.currentScore
             in
                 case code of
-                    32 -> ( { model
-                            | keyCode = code
-                            , gameState = Running
-                            , direction = Right
-                            , time = 0
-                            , snake = [(model.world.width // 2, model.world.height // 2)]
-                            , scoreboard = { scoreboard
-                                           | scores = ( scoreboard.currentScore :: scoreboard.scores )
-                                           , currentScore = { currentScore
-                                                            | score = 0
-                                                            }
-                                           }
-                            }, generateApple model.world )
+                    32 ->
+                        let
+                            newModel = { model
+                                       | keyCode = code
+                                       , gameState = Running
+                                       , direction = Right
+                                       , time = 0
+                                       , snake = [(model.world.width // 2, model.world.height // 2)]
+                                       , scoreboard = { scoreboard
+                                                      | scores = ( scoreboard.currentScore :: scoreboard.scores )
+                                                      , currentScore = { currentScore
+                                                                       | score = 0
+                                                                       }
+                                                      }
+                                       }
+                        in
+                            ( newModel, generateApple newModel.snake newModel.world )
                     default -> ( { model | keyCode = code }, Cmd.none )
         Running ->
             case code of
@@ -94,7 +98,7 @@ tick time model =
                 Move snake ->
                     ( { model | time = time, snake = snake }, Cmd.none )
                 Apple snake ->
-                    ( { model | time = time, snake = snake, apple = Nothing, scoreboard = updateScore snake model.scoreboard }, generateApple model.world )
+                    ( { model | time = time, snake = snake, apple = Nothing, scoreboard = updateScore snake model.scoreboard }, generateApple snake model.world )
                 Fail snake ->
                     ( { model
                       | time = time

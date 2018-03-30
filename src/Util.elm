@@ -38,3 +38,19 @@ randomElement default list =
     Random.int 0 ( List.length list )
     |> Random.map (flip get list)
     |> Random.map ( Maybe.withDefault default )
+
+
+flatten : List (List a) -> List a
+flatten list =
+    case list of
+        [] -> []
+        []::t -> flatten t
+        (h::t)::t2 -> h :: (flatten (t::t2))
+
+
+comb2 : List a -> List b -> List (a, b)
+comb2 listA listB =
+    case listA of
+        [] -> []
+        a::t ->
+            (List.map ((,) a) listB) ++ (comb2 t listB)

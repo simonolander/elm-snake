@@ -3,6 +3,7 @@ module Snake exposing (..)
 import Model exposing (..)
 import Keyboard
 import Random
+import Util
 
 toDirection : Keyboard.KeyCode -> Maybe Direction
 toDirection code =
@@ -65,7 +66,12 @@ moveSnake {world, snake, direction, apple} =
                 Fail snake
 
 
-generateApple : World -> Cmd Msg
-generateApple { width, height } =
-    Random.pair (Random.int 0 width) (Random.int 0 height)
-    |> Random.generate NewApple
+generateApple : Snake -> World -> Cmd Msg
+generateApple snake world =
+    let
+        {width, height} = world
+        allPositions = Util.comb2 (List.range 0 width) (List.range 0 height)
+        possiblePositions = List.filter (not << flip List.member snake) allPositions
+    in
+        Util.randomElement (0, 0) possiblePositions
+        |> Random.generate NewApple
