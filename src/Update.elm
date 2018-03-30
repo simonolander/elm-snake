@@ -50,7 +50,6 @@ keyMsg code model =
                                                             }
                                            }
                             }, generateApple model.world )
-                    78 -> ( { model | keyCode = code, gameState = EnterName }, Cmd.none )
                     default -> ( { model | keyCode = code }, Cmd.none )
         Running ->
             case code of

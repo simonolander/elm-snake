@@ -4,7 +4,7 @@ import Model
 import Random
 import Util
 names =
-    ["adam"
+    [ "adam"
     , "alena"
     , "amara"
     , "annetta"
