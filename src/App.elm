@@ -1,22 +1,16 @@
 module App exposing (..)
 
-import Footer
-import Model exposing (..)
-import Array exposing (Array)
-import Color
-import Html exposing (Html, article, aside, aside, div, footer, header, node, pre, program, text)
-import Collage
+import Footer exposing (footer)
+import Html exposing (Html, article, div, node, program)
+import Html.Attributes exposing (attribute, class)
+import Instructions exposing (instructions)
 import Keyboard
+import Model exposing (..)
 import Names exposing (generateName)
 import Render exposing (getRenderParams, render)
-import Scoreboard exposing (scoreboard, updateScore)
+import Scoreboard exposing (scoreboard)
 import Snake exposing (generateApple)
-import Time exposing (Time, second, millisecond)
-import Random
-import Dict exposing (Dict)
-import Element exposing (Element)
-import Html.Attributes exposing (attribute, class, style)
-import Instructions exposing (instructions)
+import Time
 import Title exposing (title)
 import Update exposing (update)
 
@@ -53,7 +47,7 @@ gameView model =
     , article [ class "main" ] [render model]
     , instructions
     , scoreboard model.scoreboard
-    , Footer.footer
+    , footer
     ]
 
 
