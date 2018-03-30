@@ -1,5 +1,6 @@
 module App exposing (..)
 
+import Footer
 import Model exposing (..)
 import Array exposing (Array)
 import Color
@@ -52,7 +53,7 @@ gameView model =
     , article [ class "main" ] [render model]
     , instructions
     , scoreboard model.scoreboard
-    , footer [ class "footer" ] [ text "Footer" ]
+    , Footer.footer
     ]
 
 

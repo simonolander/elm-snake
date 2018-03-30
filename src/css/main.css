@@ -1,6 +1,6 @@
 body {
     font-family: "Courier New", monospace;
-    background: #eeffee;
+    background: #adc5ad;
     white-space: pre;
 }
 
@@ -48,12 +48,28 @@ body {
 }
 
 .title {
-    margin: 20px;
+    margin-left: 20px;
+    margin-top: 20px;
+    margin-right: 20px;
     background: #fffcee;
     font-size: large;
-    text-align: center;
+    text-align: left;
+    padding-left: 20px;
+}
+
+.main {
+    margin: 20px;
+    background: #fffcee;
 }
 
 li.currentScore {
     color: blue;
+}
+
+.footer {
+    margin-left: 20px;
+    margin-right: 20px;
+    padding: 20px;
+    text-align: right;
+    background: #fffcee;
 }
