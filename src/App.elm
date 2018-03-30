@@ -1,53 +1,25 @@
 module App exposing (..)
+
+import Model exposing (..)
 import Array exposing (Array)
 import Color
-import Html exposing (Html, div, text, program, pre)
+import Html exposing (Html, article, aside, aside, div, footer, header, node, pre, program, text)
 import Collage
 import Keyboard
+import Scoreboard exposing (scoreboard)
 import Time exposing (Time, second, millisecond)
 import Random
-import Bootstrap.CDN as CDN
-import Bootstrap.Grid as Grid
-import Bootstrap.Grid.Col as Col
-import Bootstrap.Grid.Row as Row
 import Dict exposing (Dict)
 import Element exposing (Element)
+import Html.Attributes exposing (attribute, class, style)
+import Instructions exposing (instructions)
+import Title exposing (title)
 
 -- CONSTANTS
 
 -- MODEL
 
 
-type Direction = Left | Up | Right | Down
-type SnakeMove = Apple Snake | Move Snake | Fail Snake
-type SnakePiece = Head Direction
-    | Tail Direction
-    | Body Direction Direction
-    | Egg
-
-type alias Dimension = { width: Float, height: Float}
-type alias Point = (Int, Int)
-type alias Apple = Point
-type alias Snake = List Point
-type alias World = { width: Int, height: Int }
-type alias GameOver = Bool
-type alias RenderParams =
-    { collage: Dimension
-    , board: Dimension
-    , unit: Dimension
-    , borderThicknessRatio: Float
-    }
-
-type alias Model =
-    { keyCode: Keyboard.KeyCode
-    , direction: Direction
-    , time: Time
-    , snake: Snake
-    , world: World
-    , gameOver: GameOver
-    , apple: Maybe Apple
-    , rp: RenderParams
-    }
 
 
 init : ( Model, Cmd Msg )
@@ -70,11 +42,6 @@ init =
 -- MESSAGES
 
 
-type Msg
-    = KeyMsg Keyboard.KeyCode
-    | Tick Time
-    | NewApple Apple
-
 
 
 -- VIEW
@@ -91,14 +58,14 @@ debugView model =
            ]
 
 gameView model =
-    Grid.container []
-        [ CDN.stylesheet -- creates an inline style node with the Bootstrap CSS
-        , Grid.row [ Row.centerXl ]
-              [ Grid.col [] [ text "1 of 3"]
-              , Grid.col [ Col.xs8, Col.middleLg] [ renderWorldCollage model ]
-              , Grid.col [] [ text "3 of 3"]
-              ]
-        ]
+    div [ class "wrapper" ]
+    [ node "link" [ attribute "rel" "stylesheet", attribute "type" "text/css", attribute "href" "/src/css/main.css"] []
+    , title
+    , article [ class "main" ] [renderWorldCollage model]
+    , instructions
+    , scoreboard model
+    , footer [ class "footer" ] [ text "Footer" ]
+    ]
 
 
 
