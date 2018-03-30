@@ -21,13 +21,24 @@ toOl scoreboard =
                 EQ -> EQ
                 LT -> GT
                 GT -> LT
-        toLi (score, classes) =
-            li classes [ text ( String.padRight 12 ' ' score.name ++ (toString score.score) ) ]
-        scores =
-            ( scoreboard.currentScore, [ class "currentScore" ] ) :: ( List.map addDefaultClass scoreboard.scores )
+        topTenOldScores =
+            List.map addDefaultClass scoreboard.scores
             |> List.sortWith scoreComparison
             |> List.take 10
-            |> List.map toLi
+        topTenScores =
+            topTenOldScores
+            |> (::) ( scoreboard.currentScore, [ class "currentScore" ] )
+            |> List.sortWith scoreComparison
+        highScore =
+            List.head topTenScores
+            |> Maybe.map Tuple.first
+            |> Maybe.map .score
+            |> Maybe.withDefault 0
+        scorePadLength = highScore |> toString |> String.length
+        toLi (score, classes) =
+            li classes [ text ( String.padRight 12 ' ' score.name ++ (toString score.score |> String.padLeft scorePadLength ' ') ) ]
+        scores =
+            List.map toLi topTenScores
     in
         ol [] scores
 
