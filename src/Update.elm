@@ -23,15 +23,25 @@ keyMsg code model =
                 32 -> ( { model | keyCode = code, gameState = Running }, Cmd.none )
                 default -> ( { model | keyCode = code }, Cmd.none )
         GameOver ->
-            case code of
-                32 -> ( { model
-                        | keyCode = code
-                        , gameState = Running
-                        , direction = Right
-                        , time = 0
-                        , snake = [(model.world.width // 2, model.world.height // 2)]
-                        }, generateApple model.world )
-                default -> ( { model | keyCode = code }, Cmd.none )
+            let
+                scoreboard = model.scoreboard
+                currentScore = scoreboard.currentScore
+            in
+                case code of
+                    32 -> ( { model
+                            | keyCode = code
+                            , gameState = Running
+                            , direction = Right
+                            , time = 0
+                            , snake = [(model.world.width // 2, model.world.height // 2)]
+                            , scoreboard = { scoreboard
+                                           | scores = ( scoreboard.currentScore :: scoreboard.scores )
+                                           , currentScore = { currentScore
+                                                            | score = 0
+                                                            }
+                                           }
+                            }, generateApple model.world )
+                    default -> ( { model | keyCode = code }, Cmd.none )
         Running ->
             case code of
                 32 -> ( { model | keyCode = code, gameState = Paused }, Cmd.none )
@@ -60,19 +70,9 @@ tick time model =
                 Apple snake ->
                     ( { model | time = time, snake = snake, apple = Nothing, scoreboard = updateScore snake model.scoreboard }, generateApple model.world )
                 Fail snake ->
-                    let
-                        scoreboard = model.scoreboard
-                        currentScore = scoreboard.currentScore
-                    in
-                        ( { model
-                          | time = time
-                          , snake = snake
-                          , gameState = GameOver
-                          , scoreboard = { scoreboard
-                                         | scores = ( scoreboard.currentScore :: scoreboard.scores )
-                                         , currentScore = { currentScore
-                                                          | score = 0
-                                                          }
-                                         }
-                          }, Cmd.none )
+                    ( { model
+                      | time = time
+                      , snake = snake
+                      , gameState = GameOver
+                      }, Cmd.none )
         default -> ( { model | time = time }, Cmd.none )

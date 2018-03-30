@@ -52,3 +52,7 @@ body {
     font-size: large;
     text-align: center;
 }
+
+li.currentScore {
+    color: blue;
+}

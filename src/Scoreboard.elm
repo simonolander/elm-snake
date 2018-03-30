@@ -9,19 +9,27 @@ scoreboard scoreboard =
     aside
         [ class "aside aside-2 instructions" ]
         [ h1 [] [ text "Scoreboard" ]
-        , toOl (scoreboard.currentScore :: scoreboard.scores)
+        , toOl scoreboard
         ]
 
-toOl : List Score -> Html msg
-toOl list =
-    List.take 10 list
-    |> List.map toLi
-    |> ol []
-
-
-toLi : Score -> Html msg
-toLi score =
-    li [] [ text ( score.name ++ (": ") ++ (toString score.score) ) ]
+toOl : Model.Scoreboard -> Html msg
+toOl scoreboard =
+    let
+        addDefaultClass = flip (,) []
+        scoreComparison (a,_) (b,_) =
+            case compare a.score b.score of
+                EQ -> EQ
+                LT -> GT
+                GT -> LT
+        toLi (score, classes) =
+            li classes [ text ( score.name ++ (": ") ++ (toString score.score) ) ]
+        scores =
+            ( scoreboard.currentScore, [ class "currentScore" ] ) :: ( List.map addDefaultClass scoreboard.scores )
+            |> List.sortWith scoreComparison
+            |> List.take 10
+            |> List.map toLi
+    in
+        ol [] scores
 
 
 updateScore : Model.Snake -> Model.Scoreboard -> Model.Scoreboard
