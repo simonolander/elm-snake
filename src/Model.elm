@@ -1,5 +1,6 @@
 module Model exposing (..)
 
+import Http
 import Keyboard
 import Time exposing (Time)
 
@@ -44,3 +45,5 @@ type Msg
     | Tick Time
     | NewApple Apple
     | NewName String
+    | ReceiveScores (Result Http.Error (List Score) )
+    | ScoreSent (Result Http.Error String )

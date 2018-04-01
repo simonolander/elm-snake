@@ -2,6 +2,7 @@ module Update exposing (update)
 
 import Char
 import Keyboard
+import Rest exposing (getScores, postScore)
 import Time
 import Model exposing (..)
 import Snake exposing (..)
@@ -21,6 +22,20 @@ update msg model =
                 newScoreboard = { scoreboard | currentScore = { currentScore | name = name } }
             in
                 ( { model | scoreboard = newScoreboard }, Cmd.none )
+        ReceiveScores (Ok scores) ->
+            let
+                scoreboard = model.scoreboard
+                newScoreboard = { scoreboard | scores = scores }
+                newModel = { model | scoreboard = newScoreboard }
+            in
+                ( newModel, Cmd.none )
+        ReceiveScores (Err error) ->
+            let
+                a = Debug.log (toString error)
+            in
+                ( model, getScores )
+        ScoreSent _ ->
+            ( model, getScores )
 
 
 keyMsg : Keyboard.KeyCode -> Model -> ( Model, Cmd Msg )
@@ -104,5 +119,5 @@ tick time model =
                       | time = time
                       , snake = snake
                       , gameState = GameOver
-                      }, Cmd.none )
+                      }, postScore model.scoreboard.currentScore )
         default -> ( { model | time = time }, Cmd.none )

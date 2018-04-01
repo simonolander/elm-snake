@@ -8,6 +8,7 @@ import Keyboard
 import Model exposing (..)
 import Names exposing (generateName)
 import Render exposing (getRenderParams, render)
+import Rest exposing (getScores)
 import Scoreboard exposing (scoreboard)
 import Snake exposing (generateApple)
 import Time
@@ -31,7 +32,13 @@ init =
                 , gameState = NotStarted
                 }
     in
-    ( model, Cmd.batch [generateApple snake model.world, generateName] )
+    ( model
+    , Cmd.batch
+        [ generateApple snake model.world
+        , generateName
+        , getScores
+        ]
+    )
 
 
 -- VIEW
