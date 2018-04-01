@@ -39,4 +39,4 @@ postScore { score, name } =
             Http.jsonBody
                 object
     in
-        Http.post url body (Json.Decode.succeed "") |> Http.send Model.ScoreSent
+        Http.post url body (Json.Decode.list scoreDecoder) |> Http.send Model.ReceiveScores

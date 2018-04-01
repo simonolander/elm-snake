@@ -34,8 +34,6 @@ update msg model =
                 a = Debug.log (toString error)
             in
                 ( model, getScores )
-        ScoreSent _ ->
-            ( model, getScores )
 
 
 keyMsg : Keyboard.KeyCode -> Model -> ( Model, Cmd Msg )
@@ -61,8 +59,7 @@ keyMsg code model =
                                        , time = 0
                                        , snake = [(model.world.width // 2, model.world.height // 2)]
                                        , scoreboard = { scoreboard
-                                                      | scores = ( scoreboard.currentScore :: scoreboard.scores )
-                                                      , currentScore = { currentScore
+                                                      | currentScore = { currentScore
                                                                        | score = 0
                                                                        }
                                                       }

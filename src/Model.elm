@@ -46,4 +46,3 @@ type Msg
     | NewApple Apple
     | NewName String
     | ReceiveScores (Result Http.Error (List Score) )
-    | ScoreSent (Result Http.Error String )
