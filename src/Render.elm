@@ -9,6 +9,12 @@ import Text
 import Util exposing (..)
 
 
+{-| This module contains code to render the world, the snake, and the apple.
+    It's super messy.
+    I'm sorry.
+-}
+
+
 getRenderParams : World -> RenderParams
 getRenderParams world =
     let

@@ -3,6 +3,16 @@ module Names exposing (..)
 import Model
 import Random
 import Util
+
+{-| This is just a super small module to get some random names when we start the game.
+-}
+
+generateName : Cmd Model.Msg
+generateName =
+    Util.randomElement "anon" names |> Random.generate Model.NewName
+
+
+names : List String
 names =
     [ "adam"
     , "alena"
@@ -103,8 +113,3 @@ names =
     , "xerxes"
     , "yves"
     ]
-
-
-generateName : Cmd Model.Msg
-generateName =
-    Util.randomElement "anon" names |> Random.generate Model.NewName
