@@ -5,6 +5,10 @@ import Keyboard
 import Random
 import Util
 
+
+{-| Gets a Direction from a KeyCode. WASD and arrow keys give directions,
+    other keys give Nothing.
+-}
 toDirection : Keyboard.KeyCode -> Maybe Direction
 toDirection code =
     case code of
@@ -19,6 +23,8 @@ toDirection code =
         default -> Nothing
 
 
+{-| Returns the provided direction if it's not the second element of the snake
+-}
 changeDirection : Snake -> Direction -> Maybe Direction
 changeDirection snake direction =
     case snake of
@@ -30,6 +36,8 @@ changeDirection snake direction =
         [] -> Debug.log "changeDirection: Empty snake" Nothing
 
 
+{-| Moves a point in a certain direction.
+-}
 movePoint : Direction -> Point -> Point
 movePoint dir (x, y) =
     case dir of
@@ -39,6 +47,8 @@ movePoint dir (x, y) =
         Down -> (x, y + 1)
 
 
+{-| The snake is moving. Will it collide with something, eat an apple, or just move normally?
+-}
 moveSnake : Model -> SnakeMove
 moveSnake {world, snake, direction, apple} =
     let
@@ -66,6 +76,8 @@ moveSnake {world, snake, direction, apple} =
                 Fail snake
 
 
+{-| Generates a message with a newly generated apple.
+-}
 generateApple : Snake -> World -> Cmd Msg
 generateApple snake world =
     let

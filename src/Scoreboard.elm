@@ -4,6 +4,9 @@ import Model exposing (Score)
 import Html exposing (Html, aside, h1, input, li, ol, p, text)
 import Html.Attributes exposing (class, placeholder)
 
+
+{-| Renders the score board together with some header and classes.
+-}
 scoreboard : Model.Scoreboard -> Html msg
 scoreboard scoreboard =
     aside
@@ -12,6 +15,9 @@ scoreboard scoreboard =
         , toOl scoreboard
         ]
 
+{-| Takes the scoreboard, sorts it, and renders it as a
+    numbered list. The player's score is blue.
+-}
 toOl : Model.Scoreboard -> Html msg
 toOl scoreboard =
     let
@@ -43,6 +49,8 @@ toOl scoreboard =
         ol [] scores
 
 
+{-| Computes the current score from the snake.
+-}
 updateScore : Model.Snake -> Model.Scoreboard -> Model.Scoreboard
 updateScore snake scoreboard =
     let

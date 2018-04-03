@@ -8,6 +8,10 @@ import Model exposing (..)
 import Snake exposing (..)
 import Scoreboard exposing (..)
 
+{-| The update function takes a message and the current model
+    in order to compute the new model. This is the only way
+    the state is changed in the application.
+-}
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
@@ -36,6 +40,8 @@ update msg model =
                 ( model, getScores )
 
 
+{-| Update the model after a certain key was pressed.
+-}
 keyMsg : Keyboard.KeyCode -> Model -> ( Model, Cmd Msg )
 keyMsg code model =
     case model.gameState of
@@ -102,6 +108,9 @@ keyMsg code model =
                         ( { model | keyCode = code, scoreboard = { scoreboard | currentScore = { currentScore | name = newName } } }, Cmd.none )
 
 
+{-| Update the model after a time tick event has occured.
+    We only care about Tick if the current game state is Running.
+-}
 tick : Time.Time -> Model -> ( Model, Cmd Msg )
 tick time model =
     case model.gameState of
