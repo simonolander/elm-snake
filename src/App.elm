@@ -46,11 +46,6 @@ init =
 
 view : Model -> Html Msg
 view model =
-    gameView model
-
-
-gameView : Model -> Html msg
-gameView model =
     div [ class "wrapper" ]
     [ node "link" [ attribute "rel" "stylesheet", attribute "type" "text/css", attribute "href" "/src/css/main.css"] []
     , title
