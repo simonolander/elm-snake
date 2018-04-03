@@ -3,6 +3,8 @@ module Instructions exposing (instructions)
 import Html exposing (aside, h1, p, text)
 import Html.Attributes exposing (class)
 
+{-| Instructions are just some info on how to play the game.
+-}
 instructions =
     aside
         [ class "aside aside-1 instructions" ]
