@@ -60,6 +60,7 @@ body {
 .main {
     margin: 20px;
     background: #fffcee;
+    flex-grow: 0;
 }
 
 li.currentScore {
