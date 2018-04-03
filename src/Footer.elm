@@ -3,6 +3,9 @@ module Footer exposing (footer)
 import Html
 import Html.Attributes exposing (class, href)
 
+
+{-| The footer is easy. We just print the author's name and a link to his repo.
+-}
 footer =
      Html.footer
         [ class "footer" ]
