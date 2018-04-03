@@ -16,6 +16,11 @@ import Title exposing (title)
 import Update exposing (update)
 
 
+{-| The init method specifies the initial model and the commands to run initially.
+    When the game starts, we need to setup the world, some zero score, and compute the render parameters.
+    We also need to generate a random apple, pick a name for our player, and get the scoreboard from the
+    server.
+-}
 init : ( Model, Cmd Msg )
 init =
     let
@@ -41,9 +46,8 @@ init =
     )
 
 
--- VIEW
-
-
+{-| The view method takes the model and renders it into Html. We also sneakily include our .css here.
+-}
 view : Model -> Html Msg
 view model =
     div [ class "wrapper" ]
@@ -56,10 +60,11 @@ view model =
     ]
 
 
-
--- SUBSCRIPTIONS
-
-
+{-| Subscriptions let us get notified of events that happen outside our control.
+    Depending on the current GameState, we are interested in different events.
+    We always want to be notified of key presses, but are only interested in time
+    when the game is actually running.
+-}
 subscriptions : Model -> Sub Msg
 subscriptions model =
     case model.gameState of
@@ -67,19 +72,22 @@ subscriptions model =
             Sub.batch [ Keyboard.downs KeyMsg ]
         GameOver ->
             Sub.batch [ Keyboard.downs KeyMsg ]
-        Running ->
-            Sub.batch [ Keyboard.downs KeyMsg
-                      , Time.every (50 * Time.millisecond) Tick
-                      ]
         Paused ->
             Sub.batch [ Keyboard.downs KeyMsg ]
         EnterName ->
             Sub.batch [ Keyboard.downs KeyMsg ]
+        Running ->
+            Sub.batch [ Keyboard.downs KeyMsg
+                      , Time.every (50 * Time.millisecond) Tick
+                      ]
 
 
--- MAIN
-
-
+{-| The main method creates our program. Here we specify our
+        - Initial State
+        - View function
+        - Update function
+        - Subscriptions
+-}
 main : Program Never Model Msg
 main =
     program
