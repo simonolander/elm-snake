@@ -34,7 +34,7 @@ init =
                 , apple = Nothing
                 , rp = getRenderParams world
                 , scoreboard = { scores = [], currentScore = { score = 0, name = "anon" } }
-                , gameState = NotStarted
+                , gameState = EnterName
                 }
     in
     ( model
