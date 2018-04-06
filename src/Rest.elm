@@ -33,7 +33,7 @@ scoreDecoder =
 -}
 getScores : Cmd Model.Msg
 getScores =
-    Http.get url (Json.Decode.list scoreDecoder) |> Http.send Model.ReceiveScores
+    Http.get (url ++ "?game=elm-snake") (Json.Decode.list scoreDecoder) |> Http.send Model.ReceiveScores
 
 
 {-| Posts a score to the server, and returns a list of the new scores.
@@ -45,6 +45,7 @@ postScore { score, name } =
             Json.Encode.object
                 [ ("score", Json.Encode.int score)
                 , ("username", Json.Encode.string name)
+                , ("game", Json.Encode.string "elm-snake")
                 ]
         body =
             Http.jsonBody
